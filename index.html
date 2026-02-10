@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CITY BENEFITS BANK</title>
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(160deg,#020617,#0f172a,#020617);
+color:white;
+}
+
+/* Login */
+.login{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.login-box{
+width:90%;
+max-width:350px;
+background:linear-gradient(145deg,#1e293b,#0f172a);
+padding:25px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 0 30px #06b6d4;
+}
+
+input{
+width:100%;
+padding:14px;
+margin:8px 0;
+border-radius:12px;
+border:none;
+background:#020617;
+color:white;
+}
+
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+background:linear-gradient(90deg,#06b6d4,#3b82f6);
+color:white;
+font-weight:bold;
+}
+
+/* Dashboard */
+.app{
+display:none;
+padding:20px;
+padding-bottom:80px;
+}
+
+/* Balance Card */
+.card{
+background:linear-gradient(135deg,#06b6d4,#3b82f6,#9333ea);
+padding:25px;
+border-radius:22px;
+margin-top:20px;
+box-shadow:0 0 25px #06b6d4;
+}
+
+/* Feature Blocks */
+.feature{
+background:#1e293b;
+padding:20px;
+border-radius:18px;
+margin-top:20px;
+box-shadow:0 0 10px #020617;
+}
+
+.notice{
+color:orange;
+font-size:14px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="loginPage">
+<div class="login-box">
+
+<h2>🏦 CITY BENEFITS BANK</h2>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+<p id="error" style="color:red;"></p>
+
+</div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appPage">
+
+<h2>CITY BENEFITS BANK</h2>
+
+<!-- BALANCE -->
+<div class="card">
+<h3>Total Balance</h3>
+<h1 id="balance">$7,500</h1>
+<p>Sidney Raphael</p>
+</div>
+
+<!-- TRANSFER -->
+<div class="feature">
+<h3>Transfer Money</h3>
+
+<input placeholder="Bank Name">
+<input placeholder="Account Number">
+<input placeholder="Routing Number">
+<input placeholder="Amount">
+
+<button onclick="blocked()">Transfer</button>
+
+<p class="notice" id="transferMsg"></p>
+</div>
+
+<!-- WITHDRAW -->
+<div class="feature">
+<h3>Withdraw Money</h3>
+
+<input placeholder="Bank Name">
+<input placeholder="Account Number">
+<input placeholder="Routing Number">
+<input placeholder="Amount">
+
+<button onclick="blocked()">Withdraw</button>
+
+<p class="notice" id="withdrawMsg"></p>
+</div>
+
+<!-- DEPOSIT (LAST) -->
+<div class="feature">
+<h3>Deposit Money</h3>
+
+<input id="depositAmount" placeholder="Enter Amount">
+<button onclick="deposit()">Deposit</button>
+
+<p id="depositMsg"></p>
+</div>
+
+</div>
+
+<script>
+
+let balance = 7500;
+
+function formatMoney(num){
+return "$" + num.toLocaleString();
+}
+
+function login(){
+
+if(username.value==="SidneyRaphael002" && password.value==="Annesidney1959"){
+loginPage.style.display="none";
+appPage.style.display="block";
+}else{
+error.innerText="Invalid Login";
+}
+}
+
+/* Block Transfer + Withdraw */
+function blocked(){
+
+transferMsg.innerText =
+"⚠ You should verify your ID.ME before you can transfer or withdraw";
+
+withdrawMsg.innerText =
+"⚠ You should verify your ID.ME before you can transfer or withdraw";
+
+}
+
+/* Deposit */
+function deposit(){
+
+let amount = parseFloat(depositAmount.value);
+
+if(amount>0){
+balance += amount;
+document.getElementById("balance").innerText=formatMoney(balance);
+depositMsg.innerText="Deposit Successful ✔";
+}
+
+}
+
+/* Service Worker */
+if('serviceWorker' in navigator){
+navigator.serviceWorker.register('service-worker.js');
+}
+
+</script>
+
+</body>
+</html>
