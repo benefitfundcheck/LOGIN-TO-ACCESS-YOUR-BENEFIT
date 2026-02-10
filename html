@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sidney Bank</title>
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#0f172a;
+color:white;
+}
+
+/* Login */
+.login{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.login-box{
+width:90%;
+max-width:350px;
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 0 20px cyan;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+border:none;
+}
+
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:cyan;
+font-weight:bold;
+}
+
+/* Fingerprint */
+.fingerprint{
+font-size:60px;
+margin-top:15px;
+cursor:pointer;
+}
+
+/* Dashboard */
+.app{
+display:none;
+padding:20px;
+padding-bottom:80px;
+}
+
+/* Credit Card */
+.card{
+background:linear-gradient(135deg,#06b6d4,#3b82f6);
+padding:25px;
+border-radius:20px;
+margin-top:20px;
+transition:0.6s;
+}
+
+.card:hover{
+transform:rotateY(180deg);
+}
+
+/* Feature */
+.feature{
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
+}
+
+.transaction{
+font-size:14px;
+border-bottom:1px solid gray;
+padding:6px 0;
+}
+
+/* Bottom Nav */
+.nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:#020617;
+display:flex;
+justify-content:space-around;
+padding:15px 0;
+}
+
+.nav div{
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="loginPage">
+<div class="login-box">
+
+<h2>💳 Sidney Bank</h2>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<div class="fingerprint" onclick="fingerLogin()">🔐</div>
+<p style="font-size:12px;">Tap fingerprint to simulate biometric login</p>
+
+<p id="error" style="color:red;"></p>
+
+</div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appPage">
+
+<h2>Welcome Sidney</h2>
+
+<div class="card">
+<h3>Total Balance</h3>
+<h1 id="balance">£7,651,500.80</h1>
+<p>Sidney Raphael</p>
+</div>
+
+<!-- Deposit -->
+<div class="feature">
+<h3>Deposit Money</h3>
+<input id="depositAmount" type="number" placeholder="Enter Amount">
+<button onclick="deposit()">Deposit</button>
+<p id="depositMsg"></p>
+</div>
+
+<!-- Transfer -->
+<div class="feature">
+<h3>Transfer Money</h3>
+<input placeholder="Recipient">
+<input placeholder="Amount">
+<button onclick="transfer()">Transfer</button>
+<p id="transferMsg" style="color:orange;"></p>
+</div>
+
+<!-- Transactions -->
+<div class="feature">
+<h3>Recent Activity</h3>
+<div id="transactions"></div>
+</div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="nav" id="navBar" style="display:none">
+<div onclick="showAlert('Home')">🏠</div>
+<div onclick="showAlert('Cards')">💳</div>
+<div onclick="showAlert('Activity')">📊</div>
+<div onclick="showAlert('Profile')">👤</div>
+</div>
+
+<script>
+
+let balance = 7651500.80;
+
+let transactions = [
+"✔ Salary £2000",
+"✔ Netflix £15",
+"✔ Electricity £120"
+];
+
+function timeStamp(){
+return new Date().toLocaleTimeString();
+}
+
+function formatMoney(num){
+return "£" + num.toLocaleString(undefined,{minimumFractionDigits:2});
+}
+
+/* Animated Balance */
+function animateBalance(newBalance){
+
+let start = balance;
+let increment = (newBalance-start)/30;
+
+let counter = setInterval(()=>{
+start += increment;
+
+if(start >= newBalance){
+start = newBalance;
+clearInterval(counter);
+}
+
+balanceText.innerText=formatMoney(start);
+
+},30);
+}
+
+function showTransactions(){
+
+let html="";
+transactions.forEach(t=>{
+html+=`<div class="transaction">${t} • ${timeStamp()}</div>`;
+});
+
+transactions.innerHTML=html;
+}
+
+/* Login */
+function login(){
+
+if(username.value==="SidneyRaphael002" && password.value==="Annesidney1959"){
+openApp();
+}else{
+error.innerText="Invalid Login";
+}
+}
+
+/* Fingerprint Login */
+function fingerLogin(){
+openApp();
+}
+
+function openApp(){
+loginPage.style.display="none";
+appPage.style.display="block";
+navBar.style.display="flex";
+showTransactions();
+}
+
+/* Deposit */
+function deposit(){
+
+let amount = parseFloat(depositAmount.value);
+
+if(amount>0){
+
+let newBalance = balance + amount;
+balance=newBalance;
+
+document.getElementById("balance").innerText=formatMoney(balance);
+
+transactions.unshift(`✔ Deposit £${amount}`);
+showTransactions();
+
+depositMsg.innerText="Deposit Successful ✔";
+
+/* Fake Push Notification */
+alert("💰 Deposit Alert: £"+amount+" received");
+
+}
+}
+
+/* Transfer Block */
+function transfer(){
+transferMsg.innerText="⚠ You should verify your ID.me before you can transfer";
+}
+
+/* Bottom Nav Alerts */
+function showAlert(page){
+alert(page + " page coming soon (Demo)");
+}
+
+/* Service Worker */
+if('serviceWorker' in navigator){
+navigator.serviceWorker.register('service-worker.js');
+}
+
+</script>
+
+</body>
+</html>
